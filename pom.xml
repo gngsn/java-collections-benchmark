@@ -4,63 +4,70 @@
 
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>JavaCollectionsBenchmark</groupId>
-  <artifactId>net.kaankeskin</artifactId>
+  <groupId>net.kaankeskin</groupId>
+  <artifactId>JavaCollectionsBenchmark</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.1-SNAPSHOT</version>
 
-  <name>A Camel Route</name>
+  <name>Java Collections Framework Benchmark Tool</name>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
   </properties>
 
-  <dependencyManagement>
-    <dependencies>
-      <!-- Camel BOM -->
-      <dependency>
-        <groupId>org.apache.camel</groupId>
-        <artifactId>camel-parent</artifactId>
-        <version>3.0.0-RC2</version>
-        <scope>import</scope>
-        <type>pom</type>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
 
+    <!-- https://mvnrepository.com/artifact/org.apache.camel/camel-parent -->
+    <dependency>
+      <groupId>org.apache.camel</groupId>
+      <artifactId>camel-parent</artifactId>
+      <version>3.10.0</version>
+      <type>pom</type>
+      <scope>test</scope>
+    </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.camel/camel-core -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-core</artifactId>
+      <version>3.10.0</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.camel/camel-main -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-main</artifactId>
+      <version>3.10.0</version>
     </dependency>
 
-    <!-- logging -->
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-api -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-api</artifactId>
-      <scope>runtime</scope>
+      <version>2.14.1</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-core -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-core</artifactId>
-      <scope>runtime</scope>
+      <version>2.14.1</version>
     </dependency>
+
+    <!-- https://mvnrepository.com/artifact/org.apache.logging.log4j/log4j-slf4j-impl -->
     <dependency>
       <groupId>org.apache.logging.log4j</groupId>
       <artifactId>log4j-slf4j-impl</artifactId>
-      <scope>runtime</scope>
+      <version>2.14.1</version>
+      <scope>test</scope>
     </dependency>
 
-    <!-- testing -->
+    <!-- https://mvnrepository.com/artifact/org.apache.camel/camel-test -->
     <dependency>
       <groupId>org.apache.camel</groupId>
       <artifactId>camel-test</artifactId>
+      <version>3.10.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -75,7 +82,7 @@
     <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
-      <version>29.0-jre</version>
+      <version>30.1.1-jre</version>
     </dependency>
 
     <!-- https://mvnrepository.com/artifact/org.jfree/jcommon -->
@@ -89,7 +96,7 @@
     <dependency>
       <groupId>org.jfree</groupId>
       <artifactId>jfreechart</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.3</version>
     </dependency>
 
   </dependencies>
@@ -98,19 +105,20 @@
     <defaultGoal>install</defaultGoal>
 
     <plugins>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.0</version>
+        <version>3.8.1</version>
         <configuration>
-          <source>1.8</source>
-          <target>1.8</target>
+          <release>11</release>
         </configuration>
       </plugin>
+
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-resources-plugin</artifactId>
-        <version>3.1.0</version>
+        <version>3.2.0</version>
         <configuration>
           <encoding>UTF-8</encoding>
         </configuration>
@@ -120,13 +128,15 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>1.6.0</version>
+        <version>3.0.0</version>
         <configuration>
           <includePluginDependencies>false</includePluginDependencies>
+          <mainClass>JavaCollectionsBenchmark.CollectionsBenchmark</mainClass>
         </configuration>
       </plugin>
 
     </plugins>
+
   </build>
 
 </project>
