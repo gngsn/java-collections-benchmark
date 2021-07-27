@@ -113,9 +113,9 @@ public class CollectionsBenchmark {
      */
     public static void main(String[] args) {
         try {
-            CollectionsBenchmark collectionsBenchmark = new CollectionsBenchmark(15000, 100000);
 
-            // Standard Collections List, Set, Queue Time Benchmark
+            // Standard Collections List, Set, Queue Interfaces Time Benchmark
+            CollectionsBenchmark collectionsBenchmark = new CollectionsBenchmark(15000, 100000);
             collectionsBenchmark.run(ArrayList.class);
             collectionsBenchmark.run(LinkedList.class);
             collectionsBenchmark.run(HashSet.class);
@@ -125,13 +125,13 @@ public class CollectionsBenchmark {
             collectionsBenchmark.run(ArrayDeque.class);
             collectionsBenchmark.displayCollectionsBenchmarkResults();
 
-            // Standard Collections List, Set, Queue Memory Benchmark
+            // Standard Collections List, Set, Queue Interfaces Memory Benchmark
 			List<Class<? extends Collection>> classes = new ArrayList<Class<? extends Collection>>();
 			classes.add(ArrayList.class);
             classes.add(LinkedList.class);
-            classes.add(HashSet.class);
-            classes.add(LinkedHashSet.class);
-            classes.add(TreeSet.class);
+            //classes.add(HashSet.class);
+            //classes.add(LinkedHashSet.class);
+            //classes.add(TreeSet.class);
             classes.add(PriorityQueue.class);
             classes.add(ArrayDeque.class);
     		collectionsBenchmark.runMemoryBench(classes);
@@ -143,7 +143,7 @@ public class CollectionsBenchmark {
     }
 
     /**
-     * Run the Collections Benchmark on the given collection
+     * Run the Collections Interface Benchmark on the given collection
      *
      * @param collectionTested the collection (if it's a List, some additional
      *                         bench will be done)
@@ -158,7 +158,7 @@ public class CollectionsBenchmark {
             constructor.setAccessible(true);
             collection = (Collection<String>) constructor.newInstance();
             System.out.println("Performances of " + collection.getClass().getCanonicalName() + " populated with "
-                    + populateSize + " elt(s)");
+                    + populateSize + " element(s)");
             System.out.println("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
 
             // Test List Collection used in Benchmark cases
@@ -167,8 +167,9 @@ public class CollectionsBenchmark {
                 colTest.add(Integer.toString(i % 30));
             }
 
-            // Standard Collection List, Set and Queue Benchmark
+            // Standard Collection List, Set and Queue Interface Benchmark
             if (collection instanceof List || collection instanceof Set || collection instanceof Queue) {
+
                 execute(new BenchRunnable() {
                     @Override
                     public void run(int i) {
@@ -240,82 +241,6 @@ public class CollectionsBenchmark {
                         collection.retainAll(colTest);
                     }
                 }, Math.min(populateSize, 10), "retainAll " + Math.min(populateSize, 10) + " times");
-            }
-
-            // List Benchmark
-            if (collection instanceof List) {
-                list = (List<String>) collection;
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.add((i), Integer.toString(i));
-                    }
-                }, populateSize, "add at a given index " + populateSize + " elements");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.addAll((i), colTest);
-                    }
-                }, Math.min(populateSize, 1000), "addAll " + Math.min(populateSize, 1000) + " times " + colTest.size()
-                        + " elements at a given index");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.get(i);
-                    }
-                }, Math.min(populateSize, 50000), "get " + Math.min(populateSize, 50000) + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.indexOf(i);
-                    }
-                }, Math.min(populateSize, 5000), "indexOf " + Math.min(populateSize, 5000) + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.lastIndexOf(i);
-                    }
-                }, Math.min(populateSize, 5000), "lastIndexOf " + Math.min(populateSize, 5000) + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.set(i, Integer.toString(i % 29));
-                    }
-                }, Math.max(1, populateSize), "set " + Math.max(1, populateSize) + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.subList(collection.size() / 4, collection.size() / 2);
-                    }
-                }, populateSize, "subList on a " + (populateSize / 2 - populateSize / 4) + " elts sublist "
-                        + populateSize + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.listIterator();
-                    }
-                }, populateSize, "listIterator " + populateSize + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.listIterator(i);
-                    }
-                }, populateSize, "listIterator at a given index " + populateSize + " times");
-
-                execute(new BenchRunnable() {
-                    @Override
-                    public void run(int i) {
-                        list.remove(list.size() / 2);
-                    }
-                }, 10000, "remove " + 10000 + " elements given index (index=list.size()/2)");
             }
 
             System.out.println("Benchmark done in " + ((double) (System.currentTimeMillis() - startTime)) / 1000 + "s");
