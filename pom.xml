@@ -131,7 +131,7 @@
         <version>3.0.0</version>
         <configuration>
           <includePluginDependencies>false</includePluginDependencies>
-          <mainClass>JavaCollectionsBenchmark.CollectionsBenchmark</mainClass>
+          <mainClass>benchmark.CollectionsBenchmark</mainClass>
         </configuration>
       </plugin>
 
