@@ -16,6 +16,7 @@ public class BenchmarkClient {
     public static void main(String[] args) {
 
         try {
+            Chart chart = new Chart(TIMEOUT, POPULATE_SIZE);
             // Standard Collections List, Set, Queue Interfaces Time Benchmark
             CollectionsBenchmark collectionsBenchmark = new CollectionsBenchmark(TIMEOUT, POPULATE_SIZE);
             collectionsBenchmark.run(ArrayList.class);
@@ -36,8 +37,9 @@ public class BenchmarkClient {
                 add(ArrayDeque.class);
             }};
 
-            collectionsBenchmark.runMemoryBench(classes);
-            collectionsBenchmark.displayMemoryResults();
+            Map<Class<? extends Collection<?>>, Long> colMemoryResults = collectionsBenchmark.runMemoryBench(classes);
+            chart.displayMemoryResults(colMemoryResults);
+
         } catch (Exception e) {
             e.printStackTrace();
         }

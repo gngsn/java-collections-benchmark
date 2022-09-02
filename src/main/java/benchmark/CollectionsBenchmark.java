@@ -37,7 +37,7 @@ public class CollectionsBenchmark {
      * Time in ms after which the CollectionsBenchmark task is considered timeout and is
      * stopped
      */
-    private long timeout;
+    private final long timeout;
 
     /**
      * Is the given CollectionsBenchmark task timeout
@@ -48,7 +48,7 @@ public class CollectionsBenchmark {
      * Number of elements to populate the collection on which the CollectionsBenchmark will
      * be launched
      */
-    private int populateSize;
+    private final int populateSize;
 
     /**
      * Collection implementation to be tested
@@ -56,26 +56,15 @@ public class CollectionsBenchmark {
     private Collection<String> collection;
 
     /**
-     * List implementation to be tested
-     */
-    private List<String> list;
-
-    /**
      * Default context used for each Collections Benchmark test (will populate the tested
      * collection before launching the bench)
      */
-    private List<String> defaultListCtx;
+    private final List<String> defaultListCtx;
 
     /**
      * Collections Benchmark results
      */
-    private Map<String, Map<Class<? extends Collection<?>>, Long>> colBenchResults;
-
-    /**
-     * Collections Memory results
-     */
-    private Map<Class<? extends Collection<?>>, Long> colMemoryResults;
-
+    private final Map<String, Map<Class<? extends Collection<?>>, Long>> colBenchResults;
 
     /**
      * Constructor
@@ -94,7 +83,6 @@ public class CollectionsBenchmark {
         }
 
         colBenchResults = new HashMap<>();
-        colMemoryResults = new HashMap<>();
     }
 
     /**
@@ -144,7 +132,6 @@ public class CollectionsBenchmark {
         }
 
         collection = null;
-        list = null;
         heavyGc();
     }
 
@@ -195,10 +182,6 @@ public class CollectionsBenchmark {
             Constructor<? extends Collection> constructor = collection.getClass().getDeclaredConstructor((Class<?>[]) null);
             constructor.setAccessible(true);
             collection = constructor.newInstance();
-            // update the reference
-            if (collection instanceof List) {
-                list = (List<String>) collection;
-            }
         } catch (Exception e1) {
             e1.printStackTrace();
         }
@@ -226,11 +209,14 @@ public class CollectionsBenchmark {
 
     /**
      * @param collectionClasses
+     * @return
      * @throws NoSuchMethodException
      * @throws SecurityException
      */
     @SuppressWarnings({"rawtypes", "unchecked"})
-    public void runMemoryBench(List<Class<? extends Collection>> collectionClasses) {
+    public Map<Class<? extends Collection<?>>, Long> runMemoryBench(List<Class<? extends Collection>> collectionClasses) {
+        Map<Class<? extends Collection<?>>, Long> colMemoryResults = new HashMap<>();
+
         for (Class<? extends Collection> clazz : collectionClasses) {
             try {
                 // run some gc
@@ -250,14 +236,17 @@ public class CollectionsBenchmark {
                 // measure size
                 long objectSize = (long) ((ManagementFactory.getMemoryMXBean().getHeapMemoryUsage().getUsed() - usedMemory) / 100f);
                 System.out.println(clazz.getCanonicalName() + " Object size : " + objectSize + " bytes");
-                colMemoryResults.put((Class<? extends Collection<?>>) clazz, objectSize);
                 collection.clear();
                 collection = null;
+                colMemoryResults.put((Class<? extends Collection<?>>) clazz, objectSize);
+
+                return colMemoryResults;
             } catch (Exception e) {
                 System.err.println("Failed running Benchmark on class " + clazz.getCanonicalName());
                 e.printStackTrace();
             }
         }
+        return null;
     }
 
     /**
@@ -285,9 +274,5 @@ public class CollectionsBenchmark {
 
     public void drawChart() {
         new Chart(timeout, populateSize).displayCollectionsBenchmarkResults(colBenchResults);
-    }
-
-    public void displayMemoryResults() {
-        new Chart(timeout, populateSize).displayMemoryResults(colMemoryResults);
     }
 }
